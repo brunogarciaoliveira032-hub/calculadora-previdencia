@@ -1,0 +1,16 @@
+{
+  "name": "Calculadora Previdenciária — Duarte Advogados",
+  "short_name": "Previdenciária",
+  "description": "Calculadora previdenciária (RGPS/INSS): tempo de contribuição, carência, salário de benefício e RMI, com extração de CNIS e memória de cálculo auditável.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#efe9dd",
+  "theme_color": "#1c2740",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

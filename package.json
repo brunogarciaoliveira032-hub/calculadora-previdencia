@@ -1,0 +1,23 @@
+{
+  "name": "calculadora-previdenciaria",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Calculadora previdenciária (RGPS/INSS) — extração de PDF, cálculo e memória de cálculo auditável.",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node --watch backend/server.js",
+    "postinstall": "playwright install chromium",
+    "test": "node tests/teste-sanidade-carga.js && node tests/teste-backend-server.js && node tests/teste-robustez-leitura-pdf.js && node tests/teste-decisor-campos.js && node tests/teste-dicionario-previdenciario.js && node tests/teste-motor-tempo-contribuicao.js && node tests/teste-motor-rmi.js && node tests/teste-regra-pontos-previdenciario.js && node tests/teste-regra-pontos-ui-previdenciario.js && node tests/teste-regra-pedagio50-previdenciario.js && node tests/teste-regra-pedagio100-previdenciario.js && node tests/teste-regras-pedagio-ui-previdenciario.js && node tests/teste-teto-rgps-historico.js && node tests/teste-teto-rgps-aplicado-concomitancia.js && node tests/teste-beneficio-incapacidade-permanente.js && node tests/teste-beneficio-incapacidade-permanente-ui-previdenciario.js && node tests/teste-beneficio-auxilio-incapacidade-temporaria.js && node tests/teste-beneficio-auxilio-acidente.js && node tests/teste-beneficio-pensao-por-morte.js && node tests/teste-beneficio-salario-maternidade.js && node tests/teste-beneficios-fase2-ui-previdenciario.js && node tests/teste-concomitancia-especial-ui-previdenciario.js && node tests/teste-confirmacao-manual-campo-ui-previdenciario.js && node tests/teste-validador-final-calculo.js && node tests/teste-validacao-final-ui-previdenciario.js && node tests/teste-regra-idade-minima-progressiva-previdenciario.js && node tests/teste-regra-idade-minima-progressiva-ui-previdenciario.js && node tests/teste-comparador-regras-previdenciarias.js && node tests/teste-comparador-regras-ui-previdenciario.js && node tests/teste-direito-adquirido-tempo-contribuicao.js && node tests/teste-direito-adquirido-ui-previdenciario.js && node tests/teste-reconstrucao-tabela-previdenciaria.js && node tests/teste-reconstrucao-tabela-integrada-extratores.js && node tests/teste-pipeline-ocr-ate-extracao.js && node tests/teste-classificador-tipo-documento-previdenciario.js && node tests/teste-field-rules-previdenciario.js && node tests/teste-semantic-mapper-previdenciario.js && node tests/teste-evidencia-previdenciaria.js && node tests/teste-candidate-pool-previdenciario.js && node tests/teste-decision-engine-previdenciario.js && node tests/teste-ia-revisora-previdenciaria.js && node tests/teste-preenchimento-automatico-previdenciario.js && node tests/teste-transparencia-revisao-ia.js && node tests/teste-desacoplamento-ui-dominio-previdenciario.js && node tests/teste-extrator-previdenciario.js && node tests/teste-mapper-previdenciario.js && node tests/teste-extrator-remuneracoes-previdenciario.js && node tests/teste-historico-previdenciario.js && node tests/teste-concomitancia-pendencia-previdenciaria.js && node tests/teste-correcao-inpc-previdenciario.js && node tests/teste-motor-salario-beneficio.js && node tests/teste-validacao-carencia-previdenciaria.js && node tests/teste-motor-rmi-do-historico.js && node tests/teste-e2e-previdenciario-cnis-ate-rmi.js && node tests/teste-e2e-pdf-real-previdenciario.js && node tests/teste-correcoes-pericia-seguranca.js && node tests/teste-e2e-fluxos-adicionais-previdenciario.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "dotenv": "16.4.5",
+    "express": "4.22.2",
+    "express-rate-limit": "8.6.2"
+  },
+  "devDependencies": {
+    "playwright": "1.56.0"
+  }
+}

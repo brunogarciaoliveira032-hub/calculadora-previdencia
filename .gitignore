@@ -1,0 +1,30 @@
+# Segredos — NUNCA versionar. O projeto documenta em README/server.js que
+# `.env` não é commitado; esta era a lacuna real: sem este arquivo, um
+# `git add .` distraído versionava .env (e a ANTHROPIC_API_KEY dentro dele)
+# junto com o resto do projeto sem nenhum aviso do git.
+.env
+.env.*
+!.env.example
+
+# Dependências (reinstaláveis via `npm install`, não pertencem ao histórico)
+node_modules/
+
+# Binários de browser baixados pelo postinstall do Playwright
+# (`playwright install chromium`) — grandes, reinstaláveis, específicos da
+# máquina.
+/pw-browsers/
+/.cache/ms-playwright/
+
+# Logs e artefatos de execução
+npm-debug.log*
+*.log
+
+# Sistema operacional / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Relatórios do Playwright, se algum teste passar a gerá-los
+/playwright-report/
+/test-results/
