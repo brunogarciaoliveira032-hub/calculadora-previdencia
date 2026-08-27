@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculadora Previdenciária — Duarte Advogados Associados</title>
+
+<!-- PWA: instalação na tela inicial (Android e iOS) -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1c2740">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<!-- iOS/Safari: tela cheia ao abrir da tela inicial -->
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Previdenciária">
+<style>
+  :root{
+    --bg: #efe9dd;
+    --bg-soft: #f5f1e7;
+    --card: #f7f3e8;
+    --card-border: #ded4bc;
+    --gold: #a9812f;
+    --gold-strong: #8a6a22;
+    --navy: #1c2740;
+    --navy-soft: #2c3a58;
+    --text: #2c2a24;
+    --text-muted: #6b6558;
+    --input-bg: #ffffff;
+    --input-border: #cfc6ac;
+    --shadow: 0 8px 24px rgba(28,39,64,0.08);
+    --divider: #1c2740;
+    --toast-bg: #1c2740;
+    --toast-err: #8a3324;
+    --ok: #2e6b4f;
+    --alerta: #8a6d1d;
+    --erro: #8a3324;
+    --info: #5b6472;
+  }
+  html[data-theme="dark"]{
+    --bg: #14171f;
+    --bg-soft: #191d27;
+    --card: #1c202b;
+    --card-border: #333a4a;
+    --gold: #c9a24a;
+    --gold-strong: #d9b768;
+    --navy: #e8ebf2;
+    --navy-soft: #c7cee0;
+    --text: #e6e3d9;
+    --text-muted: #9a9587;
+    --input-bg: #12151d;
+    --input-border: #3a4155;
+    --shadow: 0 8px 28px rgba(0,0,0,0.45);
+    --divider: #c9a24a;
+    --toast-bg: #2c3a58;
+    --toast-err: #a5432c;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    font-family: Georgia, 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--text);
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 16px 60px;
+    transition: background .25s ease, color .25s ease;
+  }
+
+  /* ---------- Cabeçalho / marca ---------- */
+  header.brand{
+    text-align:center;
+    padding: 32px 0 8px;
+    position:relative;
+  }
+  #themeToggle{
+    position:absolute;
+    top:20px; right:0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 0.8em;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    display:flex; align-items:center; gap:6px;
+  }
+  #themeToggle:hover{ border-color: var(--gold); }
+
+  .logo{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 10px;
+    font-size: 2.6em;
+    color: var(--navy);
+    letter-spacing: 2px;
+  }
+  .logo .divider-bar{
+    width:2px; height: 34px; background: var(--navy);
+    display:inline-block;
+  }
+  .logo span{ font-weight:400; }
+  .firm-name{
+    margin-top: 6px;
+    font-size: 1.05em;
+    letter-spacing: 3px;
+    color: var(--navy);
+  }
+  .firm-sub{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    letter-spacing: 2px;
+    font-size: 0.68em;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .practice-tag{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-size: 0.78em;
+    margin-top: 26px;
+    font-weight: 600;
+  }
+  h1.page-title{
+    color: var(--navy);
+    font-size: 2.1em;
+    margin: 10px 0 6px;
+  }
+  p.lede{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    color: var(--text-muted);
+    font-size: 0.98em;
+    line-height: 1.6;
+    max-width: 620px;
+    margin: 0 auto;
+  }
+  .hairline{
+    height: 2px;
+    background: var(--divider);
+    margin: 26px 0 30px;
+    opacity: .85;
+  }
+
+  /* ---------- Cards (antigos fieldsets) ---------- */
+  fieldset.card{
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-left: 4px solid var(--gold);
+    border-radius: 6px;
+    box-shadow: var(--shadow);
+    padding: 22px 24px 26px;
+    margin: 0 0 22px;
+  }
+  fieldset.card legend{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 0 4px;
+    color: var(--navy);
+    font-size: 1.15em;
+    font-weight: 600;
+  }
+  fieldset.card legend .art-badge{
+    font-family: Georgia, serif;
+    font-style: italic;
+    color: var(--gold);
+    font-size: 0.85em;
+    white-space: nowrap;
+  }
+  fieldset.card .legend-rule{
+    border: none;
+    border-top: 1px solid var(--card-border);
+    margin: 4px 0 16px;
+  }
+
+  label{
+    display:block;
+    margin-top: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    color: var(--navy-soft);
+  }
+  label input[type=checkbox]{ width:auto; margin-right:6px; vertical-align:middle; }
+  .opt-tag{ font-weight: 400; color: var(--text-muted); }
+  .req-tag{ color: var(--erro); font-weight: 800; margin-left: 3px; }
+
+  /* Avisos de validação (não bloqueiam o cálculo) — distintos dos erros
+     bloqueantes (.campo-erro / .msg-erro-campo), ver js/validacao.js.
+     A distinção NÃO depende só da cor (acessibilidade a daltonismo):
+     erro = borda sólida + ícone ✕; aviso = borda pontilhada + ícone ⚠. */
+  .campo-aviso{
+    border-color: var(--alerta) !important;
+    border-style: dashed !important;
+    box-shadow: 0 0 0 3px rgba(138,109,29,0.15);
+  }
+  .msg-aviso-campo{
+    display:block;
+    margin-top:4px;
+    color: var(--alerta);
+    font-size:0.8em;
+    font-weight:600;
+  }
+  .msg-aviso-campo::before{ content:"⚠ Aviso: "; font-weight:800; }
+  #avisos-formulario{
+    display:none;
+    margin: 20px 0;
+    padding: 14px 18px;
+    background: rgba(138,109,29,0.08);
+    border: 2px dashed var(--alerta);
+    border-radius: 6px;
+    color: var(--alerta);
+  }
+  #avisos-formulario h3{ margin:0 0 8px; font-size:1em; }
+  #avisos-formulario ul{ margin:0; padding-left:20px; }
+  #avisos-formulario li{ margin:2px 0; }
+
+  /* Validação em tempo real — campo preenchido sem erro/aviso pendente
+     (ver revalidarCampo em js/validacao.js). Verde, sem borda pontilhada
+     nem sólida grossa, para não competir visualmente com erro/aviso. */
+  .campo-valido{
+    border-color: var(--ok) !important;
+    box-shadow: 0 0 0 3px rgba(46,107,79,0.12);
+  }
+  .msg-sucesso-campo{
+    display:block;
+    margin-top:4px;
+    color: var(--ok);
+    font-size:0.8em;
+    font-weight:600;
+  }
+
+  input, select, textarea{
+    width:100%;
+    box-sizing:border-box;
+    padding: 10px 12px;
+    margin-top: 5px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    font-size: 0.95em;
+    color: var(--text);
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  input:focus, select:focus, textarea:focus{
+    outline:none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(169,129,47,0.18);
+  }
+  input::placeholder, textarea::placeholder{ color: var(--text-muted); opacity:.7; }
+
+  .row{ display:flex; gap: 16px; flex-wrap: wrap; }
+  .row > div{ flex:1; min-width: 200px; }
+
+  .faixa, .deposito, .levantamento{
+    display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+    margin-top: 8px;
+    padding: 8px;
+    background: var(--bg-soft);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+  }
+  .faixa input, .deposito input, .levantamento input{ width:auto; flex:1; min-width:120px; margin-top:0; }
+
+  button{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    margin-top: 12px;
+    padding: 10px 18px;
+    cursor: pointer;
+    border-radius: 6px;
+    border: 1px solid var(--gold);
+    background: transparent;
+    color: var(--gold-strong);
+    font-size: 0.88em;
+    font-weight: 600;
+    letter-spacing: .3px;
+    transition: background .15s ease, color .15s ease;
+  }
+  button:hover{ background: var(--gold); color: #fff; }
+  html[data-theme="dark"] button:hover{ color:#14171f; }
+
+  .indice-botoes{
+    display:flex; gap:8px; flex-wrap:wrap; margin-top:6px;
+  }
+  .btn-indice{
+    margin-top:0; padding:8px 14px; font-size:0.85em;
+  }
+  .btn-indice.ativo{
+    background: var(--gold); color:#fff;
+  }
+  html[data-theme="dark"] .btn-indice.ativo{ color:#14171f; }
+  .btn-indice[aria-busy="true"]{ opacity:.6; cursor:wait; }
+  #indiceUltimaAtualizacao{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+    font-size:0.82em; color:var(--text-muted); margin-top:6px; min-height:1.2em;
+  }
+  #indiceUltimaAtualizacao.erro{ color:#8a3324; }
+
+  .actions{
+    display:flex; gap:12px; flex-wrap:wrap;
+    margin: 30px 0 10px;
+  }
+  .actions button{
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+    padding: 12px 22px;
+  }
+  html[data-theme="dark"] .actions button{ color:#14171f; }
+  .actions button:hover{ background: var(--gold); border-color: var(--gold); color:#fff; }
+  #btnCalcular{ background: var(--gold); border-color: var(--gold); color:#fff; }
+  #btnCalcular:hover{ background: var(--gold-strong); border-color: var(--gold-strong); }
+
+  h2.section-title{
+    color: var(--navy);
+    margin-top: 40px;
+    border-bottom: 2px solid var(--divider);
+    padding-bottom: 8px;
+  }
+
+  #toast{
+    position:fixed; bottom:20px; right:20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    background: var(--toast-bg); color:#fff;
+    padding:12px 18px; border-radius:8px;
+    opacity:0; transition:opacity .3s; z-index:999;
+    box-shadow: var(--shadow);
+  }
+  #toast.show{opacity:1;}
+  #toast.err{background: var(--toast-err);}
+
+  .niv-erro{color: var(--erro); font-weight:bold;}
+  .niv-alerta{color: var(--alerta);}
+  .niv-info{color: var(--info);}
+  .niv-ok{color: var(--ok);}
+
+  /* Validação do formulário (js/validacao.js) */
+  .campo-erro{
+    border-color: var(--erro) !important;
+    border-style: solid !important;
+    border-width: 2px !important;
+    box-shadow: 0 0 0 3px rgba(138,51,36,0.15);
+  }
+  .msg-erro-campo{
+    display:block;
+    margin-top:4px;
+    color: var(--erro);
+    font-size:0.8em;
+    font-weight:600;
+  }
+  .msg-erro-campo::before{ content:"✕ Erro: "; font-weight:800; }
+  #erros-formulario{
+    display:none;
+    margin: 20px 0;
+    padding: 14px 18px;
+    background: rgba(138,51,36,0.08);
+    border: 2px solid var(--erro);
+    border-radius: 6px;
+    color: var(--erro);
+  }
+  #erros-formulario h3{ margin:0 0 8px; font-size:1em; }
+  #erros-formulario ul{ margin:0; padding-left:20px; }
+  #erros-formulario li{ margin:2px 0; }
+
+  #painelAuditoria{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    padding: 16px 20px;
+  }
+  #painelAuditoria.destaque{outline:3px solid var(--erro);}
+
+  #resumoResultado, #tabelaMemoria{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  }
+  table{border-collapse:collapse; width:100%; font-size:0.85em;}
+  th, td{ padding:6px 8px; border-bottom:1px solid var(--card-border); text-align:left; }
+
+  /* ---------- Importação/leitura de PDF ---------- */
+  #zonaDropPdf{
+    border: 2px dashed var(--input-border);
+    border-radius: 8px;
+    padding: 26px 18px;
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  #zonaDropPdf:hover, #zonaDropPdf.arrastando{
+    border-color: var(--gold);
+    background: var(--bg-soft);
+  }
+  #zonaDropPdf strong{ color: var(--navy); display:block; margin-bottom:4px; }
+  #inputPdf{ display:none; }
+  .pdf-acoes{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 6px; }
+  #btnCancelarLeitura{
+    display:none;
+    border-color: var(--erro);
+    color: var(--erro);
+  }
+  #btnCancelarLeitura:hover{ background: var(--erro); color:#fff; }
+
+  #leitorProgressoWrap{
+    display:none;
+    margin-top: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  }
+  #leitorProgressoTrilha{
+    background: var(--bg-soft);
+    border: 1px solid var(--card-border);
+    border-radius: 999px;
+    overflow: hidden;
+    height: 10px;
+  }
+  #leitorProgressoBarra{
+    height: 100%;
+    width: 0%;
+    background: var(--gold);
+    transition: width .2s ease;
+  }
+  #leitorProgressoTexto{
+    font-size: 0.82em;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+
+  #avisoTruncamento{
+    display:none;
+    margin-top: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    font-size: 0.85em;
+    color: var(--alerta);
+    background: var(--bg-soft);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    padding: 10px 12px;
+  }
+
+  #areaFallbackIA{
+    margin-top: 14px;
+  }
+  #areaRevisaoIA{
+    margin-top: 14px;
+  }
+  .aviso-ia{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    font-size: 0.85em;
+    color: var(--text-muted);
+    background: var(--bg-soft);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin: 0 0 10px;
+  }
+
+  #historicoLeituraPdf{
+    margin-top: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    font-size: 0.82em;
+    color: var(--text-muted);
+  }
+  #historicoLeituraPdf ul{ list-style:none; padding:0; margin:8px 0 0; }
+  #historicoLeituraPdf li{
+    display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    padding: 6px 0; border-bottom: 1px solid var(--card-border);
+  }
+
+  #leitorRelatorio, #tabelaConferencia{
+    display:none;
+    margin-top: 18px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    font-size: 0.9em;
+  }
+  #leitorRelatorio.mostrar, #tabelaConferencia.mostrar{ display:block; }
+  #leitorRelatorio{
+    background: var(--bg-soft);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    line-height: 1.6;
+  }
+
+  .badge-conf{
+    display:inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.85em;
+    font-weight: 600;
+  }
+  .badge-conf.alta{ background: rgba(46,107,79,0.15); color: var(--ok); }
+  .badge-conf.media{ background: rgba(138,109,29,0.15); color: var(--alerta); }
+  .badge-conf.baixa{ background: rgba(138,51,36,0.15); color: var(--erro); }
+
+  .celula-origem{ font-size: 0.85em; color: var(--text-muted); cursor: help; }
+  .icone-obs{ cursor: help; font-size: 0.9em; }
+  .icone-historico{ cursor: help; font-size: 0.9em; }
+
+  /* Unidade/período dos juros (Prioridade 1 do checklist), ao lado do
+     campo numérico na conferência — ex.: "1,00% a.m." ou o alerta de
+     unidade não identificada. */
+  .badge-unidade{
+    display:inline-block;
+    margin-left:6px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    font-size: 0.78em;
+    font-weight: 600;
+    background: rgba(46,107,79,0.15);
+    color: var(--ok);
+    white-space: nowrap;
+  }
+  .badge-unidade-alerta{
+    background: rgba(138,51,36,0.15);
+    color: var(--erro);
+    cursor: help;
+  }
+
+  #tabelaConferencia input.valorConferencia,
+  #tabelaConferencia select.valorConferencia{
+    margin-top:0;
+  }
+
+  .campo-preenchido-pdf{
+    background: rgba(169,129,47,0.12) !important;
+    border-color: var(--gold) !important;
+  }
+
+  /* ---- Painel previdenciário (RGPS/INSS) ---- */
+  .prev-tabela{
+    width:100%; border-collapse:collapse;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+    font-size:0.88em;
+  }
+  .prev-tabela th, .prev-tabela td{
+    text-align:left; padding:7px 10px; border-bottom:1px solid var(--card-border);
+    vertical-align:top;
+  }
+  .prev-tabela th{ color:var(--text-muted); font-weight:600; font-size:0.85em; }
+  .prev-tabela tr.requer-revisao{ background: rgba(138,109,29,0.08); }
+  .status-badge{
+    display:inline-block; padding:2px 8px; border-radius:999px;
+    font-size:0.82em; font-weight:600; white-space:nowrap;
+  }
+  .status-badge.validado{ background: rgba(46,107,79,0.15); color: var(--ok); }
+  .status-badge.requer_revisao{ background: rgba(138,109,29,0.15); color: var(--alerta); }
+
+  /* RMI TEÓRICA x ELEGIBILIDADE — nunca podem se confundir visualmente. */
+  .prev-caixa{
+    border-radius:10px; padding:16px 20px; margin:14px 0;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+  }
+  .prev-caixa-rmi-teorica{
+    background: var(--bg-soft); border:1px dashed var(--card-border);
+  }
+  .prev-caixa-rmi-teorica .prev-caixa-titulo{ color:var(--text-muted); }
+  .prev-caixa-elegibilidade.elegivel, .prev-caixa-validacao-final.elegivel{
+    background: rgba(46,107,79,0.12); border:2px solid var(--ok);
+  }
+  .prev-caixa-elegibilidade.nao-elegivel, .prev-caixa-validacao-final.nao-elegivel{
+    background: rgba(138,51,36,0.12); border:2px solid var(--erro);
+  }
+  .prev-caixa-elegibilidade.nao-verificada, .prev-caixa-validacao-final.nao-verificada{
+    background: rgba(138,109,29,0.12); border:2px solid var(--alerta);
+  }
+  .prev-caixa-titulo{ font-weight:700; font-size:1.05em; margin:0 0 8px; }
+  .prev-caixa-valor{ font-size:1.6em; font-weight:700; margin:4px 0; }
+  .prev-pendencias{ margin:8px 0 0; padding-left:20px; }
+  .prev-limitacoes{
+    font-size:0.82em; color:var(--text-muted); margin-top:10px;
+    padding-top:10px; border-top:1px dashed var(--card-border);
+  }
+
+  /* ---- Card de auditoria (resumo navegável + destaque ao saltar por âncora) ---- */
+  .prev-auditoria{
+    border:1px solid var(--card-border); border-radius:10px;
+    padding:4px 20px 16px; margin:14px 0;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+    background:var(--bg-soft);
+  }
+  .prev-auditoria-cabecalho{ padding:12px 0 6px; border-bottom:1px solid var(--card-border); margin-bottom:6px; }
+  .prev-auditoria-cabecalho .segurado{ font-weight:700; font-size:1.05em; }
+  .prev-auditoria-cabecalho .der{ color:var(--text-muted); font-size:0.9em; }
+  .prev-auditoria-linha{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:10px 4px; border-bottom:1px dashed var(--card-border);
+    text-decoration:none; color:inherit; cursor:pointer;
+  }
+  .prev-auditoria-linha:last-child{ border-bottom:none; }
+  .prev-auditoria-linha:hover{ background:rgba(169,129,47,0.08); }
+  .prev-auditoria-rotulo{ color:var(--text-muted); font-size:0.88em; }
+  .prev-auditoria-valor{ font-weight:700; font-size:1.08em; }
+  .prev-auditoria-check{ margin-left:10px; font-size:1.1em; }
+  .prev-auditoria-check.ok{ color:var(--ok); }
+  .prev-auditoria-check.alerta{ color:var(--alerta); }
+  .prev-auditoria-check.erro{ color:var(--erro); }
+
+  .prev-secao:target{
+    animation: prevDestaqueSecao 1.8s ease;
+    border-radius:10px;
+  }
+  @keyframes prevDestaqueSecao{
+    0%   { box-shadow: 0 0 0 4px rgba(169,129,47,0.55); }
+    100% { box-shadow: 0 0 0 4px rgba(169,129,47,0); }
+  }
+
+  /* Cadeia de proveniência (por linha da memória de cálculo). */
+  .prev-cadeia{
+    font-size:0.82em; margin-top:6px; padding:8px 10px;
+    background:var(--bg-soft); border-left:3px solid var(--gold);
+    border-radius:4px; line-height:1.9;
+  }
+  .prev-cadeia b{ color:var(--navy); }
+
+  /* Transparência/auditoria da decisão de cada campo (item 2 do checklist
+     de melhorias: "De-Para" explicativo — trecho exato do documento que
+     embasou o valor, nunca escondido atrás só de um tooltip). */
+  .prev-evidencias-detalhe{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+    font-size:0.85em; cursor:pointer;
+  }
+  .prev-evidencias-detalhe summary{
+    color:var(--text-muted); font-weight:600; list-style:none;
+  }
+  .prev-evidencias-detalhe summary::-webkit-details-marker{ display:none; }
+  .prev-evidencias-detalhe summary::before{ content:"▸ "; }
+  .prev-evidencias-detalhe[open] summary::before{ content:"▾ "; }
+  .prev-evidencias-detalhe > div{
+    margin-top:8px; padding:10px 12px; background:var(--bg-soft);
+    border-radius:6px; border:1px solid var(--card-border); cursor:auto;
+  }
+  .prev-evidencia-trecho{
+    font-size:0.95em; padding:8px 10px; margin:4px 0 8px;
+    background:var(--card); border-left:3px solid var(--gold);
+    border-radius:4px; font-style:italic; color:var(--text);
+  }
+  .prev-evidencia-fonte{ font-size:0.82em; color:var(--text-muted); font-style:normal; }
+  .prev-de-para{ margin:6px 0 8px; padding-left:0; list-style:none; }
+  .prev-de-para li{
+    padding:6px 8px; margin-bottom:4px; border-radius:4px;
+    background:rgba(138,109,29,0.08); border-left:3px solid var(--alerta);
+  }
+  .prev-justificativa{ font-size:0.85em; color:var(--text-muted); margin-top:6px; }
+  .prev-revisao-ia{
+    margin-top:10px; padding:8px 10px; border-radius:6px;
+    border:1px solid var(--card-border);
+  }
+  .prev-revisao-ia.confirmado{ background:rgba(46,107,79,0.10); border-color:var(--ok); }
+  .prev-revisao-ia.provavel{ background:rgba(138,109,29,0.10); border-color:var(--alerta); }
+  .prev-revisao-ia.rejeitado{ background:rgba(138,51,36,0.10); border-color:var(--erro); }
+  .prev-revisao-ia-titulo{ font-weight:700; margin-bottom:4px; }
+</style>
+</head>
+<body>
+
+<header class="brand">
+  <button type="button" id="themeToggle" onclick="alternarTema()">
+    <span id="themeIcon">🌙</span> <span id="themeLabel">Tema escuro</span>
+  </button>
+  <div class="logo"><span>D</span><span class="divider-bar"></span><span>A</span></div>
+  <div class="firm-name">DUARTE ADVOGADOS</div>
+  <div class="firm-sub">ASSOCIADOS</div>
+  <div class="practice-tag">Direito Previdenciário · RGPS/INSS</div>
+  <h1 class="page-title">Calculadora Previdenciária</h1>
+  <p style="font-size:0.85em; color: var(--text-muted); margin-top:-6px;"><span class="req-tag" title="Campo obrigatório">*</span> Campo obrigatório para o cálculo.</p>
+  <p class="lede">Extração automática de CNIS, montagem do histórico previdenciário e cálculo de tempo de contribuição, carência, salário de benefício e RMI — cada campo extraído com proveniência (documento/página), confiança e status de revisão. A RMI teórica (fórmula) e a elegibilidade real ao benefício aparecem sempre separadas, nunca uma apresentada como se fosse a outra.</p>
+</header>
+<div class="hairline"></div>
+
+<fieldset class="card">
+  <legend>📄 Importar CNIS/documentos do processo por PDF <span class="opt-tag">(opcional)</span></legend>
+  <hr class="legend-rule">
+  <div id="zonaDropPdf" tabindex="0" role="button" aria-label="Anexar PDF do processo">
+    <strong>Solte aqui o(s) PDF(s) do processo (CNIS, requerimentos, cartas, decisões...)</strong>
+    ou clique / toque para escolher o arquivo (aceita vários de uma vez)
+  </div>
+  <input type="file" id="inputPdf" accept="application/pdf,.pdf" multiple>
+  <div class="pdf-acoes">
+    <button type="button" id="btnAnexarPdf">Anexar PDF</button>
+    <button type="button" id="btnCancelarLeitura">Cancelar leitura</button>
+  </div>
+
+  <div id="leitorProgressoWrap">
+    <div id="leitorProgressoTrilha"><div id="leitorProgressoBarra"></div></div>
+    <div id="leitorProgressoTexto"></div>
+  </div>
+
+  <div id="avisoTruncamento"></div>
+  <div id="prevRelatorioLeitura"></div>
+  <div id="historicoLeituraPdf"></div>
+</fieldset>
+
+<fieldset class="card">
+  <legend>🧾 Documentos reconhecidos</legend>
+  <hr class="legend-rule">
+  <div id="prevTabelaDocumentos"><p class="opt-tag">Nenhum PDF importado ainda.</p></div>
+</fieldset>
+
+<fieldset class="card">
+  <legend>🧭 Campos do processo (DER, DIB, espécie, motivo de indeferimento, segurado...)</legend>
+  <hr class="legend-rule">
+  <p style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:0.82em;color:var(--text-muted);margin:0 0 10px;">
+    Decidido por página lida (qualquer tipo — requerimento, carta de concessão/indeferimento, decisão administrativa, processo judicial...) via Semantic Mapper → Evidence Layer → Candidate Pool → Field Rules → Decision Engine. Sem conflito entre fontes: preenchido automaticamente no formulário abaixo. Em conflito: nunca preenchido sozinho — use os botões "Usar" na tabela, ou peça a revisão por IA (ela só julga; quem decide é você).
+  </p>
+  <div class="row">
+    <div><label>Confirmado por <span class="opt-tag" title="Usado no registro de auditoria de qualquer confirmação manual feita nesta tela — sem sistema de login, este é o único registro de quem tomou a decisão.">(nome de quem está confirmando os campos em conflito, para o histórico de auditoria)</span>
+      <input id="prevConfirmadoPor" placeholder="Seu nome">
+    </label></div>
+  </div>
+  <div id="prevTabelaCampos"><p class="opt-tag">Nenhum campo do processo reconhecido ainda.</p></div>
+  <div id="prevAuditoriaConfirmacoes"></div>
+</fieldset>
+
+<fieldset class="card">
+  <legend>📋 Dados do benefício/processo</legend>
+  <hr class="legend-rule">
+  <p style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:0.82em;color:var(--text-muted);margin:0 0 10px;">
+    Campos preenchidos automaticamente pelo Decision Engine (sem conflito entre fontes) ou manualmente. Em conflito: revise na tabela acima antes de confirmar aqui.
+  </p>
+  <div class="row">
+    <div><label>Número do Benefício (NB) <input id="prevNumeroBeneficio" placeholder="NB"></label></div>
+    <div><label>Espécie de benefício <input id="prevEspecieBeneficio" placeholder="ex.: 42 — aposentadoria por tempo de contribuição"></label></div>
+  </div>
+  <div class="row">
+    <div><label>CPF do segurado <input id="prevCpfSegurado" placeholder="###.###.###-##"></label></div>
+    <div><label>Data de nascimento <input type="date" id="prevDataNascimento"></label></div>
+  </div>
+  <div class="row">
+    <div><label>DER — Data de Entrada do Requerimento <input type="date" id="prevDataDER"></label></div>
+    <div><label>DIB — Data de Início do Benefício <input type="date" id="prevDataDIB"></label></div>
+  </div>
+  <div class="row">
+    <div><label>DIP — Data de Início do Pagamento <input type="date" id="prevDataDIP"></label></div>
+    <div><label>DCB — Data de Cessação do Benefício <input type="date" id="prevDataDCB"></label></div>
+  </div>
+  <div class="row">
+    <div><label>DID — Data de Início da Doença/Incapacidade <input type="date" id="prevDataDID"></label></div>
+    <div><label>CID do laudo pericial <input id="prevCidLaudoPericial" placeholder="ex.: M54.5"></label></div>
+  </div>
+  <div class="row">
+    <div><label>Qualidade de segurado <input id="prevQualidadeSegurado" placeholder="mantida / perdida / em período de graça"></label></div>
+    <div><label>Carência cumprida (meses) <input type="number" id="prevCarenciaCumprida" min="0" step="1"></label></div>
+  </div>
+  <div class="row">
+    <div><label>Tempo de contribuição total <input id="prevTempoContribuicaoTotal" placeholder="anos, meses e dias"></label></div>
+    <div><label>Motivo do indeferimento <input id="prevMotivoIndeferimento" placeholder="ex.: carência não cumprida"></label></div>
+  </div>
+  <div class="row">
+    <div><label>Salário de benefício (SB) <input id="prevSalarioBeneficio" class="money" placeholder="0,00"></label></div>
+    <div><label>Renda Mensal Inicial (RMI) <input id="prevRendaMensalInicial" class="money" placeholder="0,00"></label></div>
+  </div>
+  <div class="row">
+    <div><label>Atividade especial (períodos/agente nocivo) <input id="prevAtividadeEspecial" placeholder="texto livre"></label></div>
+    <div><label>Período rural <input id="prevPeriodoRural" placeholder="texto livre"></label></div>
+  </div>
+  <div class="row">
+    <div><label>Vínculo empregatício <input id="prevVinculoEmpregaticio" placeholder="texto livre"></label></div>
+    <div><label>Data de óbito (pensão por morte) <input type="date" id="prevDataObito"></label></div>
+  </div>
+  <div class="row">
+    <div><label>Data de ajuizamento <input type="date" id="prevDataAjuizamento"></label></div>
+    <div><label>Tutela antecipada <input id="prevTutelaAntecipada" placeholder="sim/não + data da decisão"></label></div>
+  </div>
+  <div class="row">
+    <div><label>Data da sentença judicial <input type="date" id="prevDataSentencaJudicial"></label></div>
+    <div><label>Data do trânsito em julgado <input type="date" id="prevDataTransitoJulgado"></label></div>
+  </div>
+</fieldset>
+
+<fieldset class="card">
+  <legend>🔗 Vínculos extraídos</legend>
+  <hr class="legend-rule">
+  <div id="prevTabelaVinculos"></div>
+</fieldset>
+
+<fieldset class="card">
+  <legend>💰 Remunerações por competência</legend>
+  <hr class="legend-rule">
+  <div id="prevTabelaRemuneracoes"></div>
+</fieldset>
+
+<fieldset class="card">
+  <legend>📊 Contribuições apuradas (competências)</legend>
+  <hr class="legend-rule">
+  <div id="prevTabelaContribuicoes"></div>
+</fieldset>
+
+<fieldset class="card">
+  <legend>⚙️ Parâmetros do cálculo</legend>
+  <hr class="legend-rule">
+  <div class="row">
+    <div><label>Nome do segurado <span class="opt-tag">(opcional — só para identificação na tela de auditoria)</span>
+      <input id="prevNomeSegurado" placeholder="Nome completo">
+    </label></div>
+    <div><label>Competência de referência (DER) <span class="req-tag" title="Campo obrigatório">*</span>
+      <input type="month" id="prevCompetenciaReferencia">
+    </label></div>
+  </div>
+  <div class="row">
+    <div><label>Sexo <span class="req-tag" title="Campo obrigatório">*</span>
+      <select id="prevSexo"><option value="">Selecione</option><option value="homem">Homem</option><option value="mulher">Mulher</option></select>
+    </label></div>
+    <div><label>Idade na competência de referência (anos) <span class="opt-tag">(necessária só para checar elegibilidade)</span>
+      <input type="number" id="prevIdadeAnos" min="0" step="1">
+    </label></div>
+  </div>
+  <div class="row">
+    <div><label>Tempo de contribuição em 13/11/2019 (anos) <span class="opt-tag" title="Necessário só para as regras de transição por PEDÁGIO (art. 17 e art. 20, EC 103/2019) — o pedágio é calculado sobre o tempo que faltava nessa data específica, diferente do tempo de contribuição total na DER acima. Informe em anos fracionários (ex.: 32,5 para 32 anos e 6 meses).">(opcional — necessário só para as regras de pedágio 50%/100%)</span>
+      <input type="number" id="prevTempoContribuicaoEm13112019" min="0" step="0.01" placeholder="ex.: 32,5">
+    </label></div>
+  </div>
+  <div class="row">
+    <div><label>Salário mínimo vigente <span class="opt-tag">(opcional — aplica piso à RMI)</span> <input id="prevSalarioMinimo" class="money" placeholder="0,00"></label></div>
+    <div><label>Teto do RGPS vigente <span class="opt-tag">(opcional — aplica teto à RMI)</span> <input id="prevTetoRgps" class="money" placeholder="0,00"></label></div>
+  </div>
+  <div class="row">
+    <div><label>Fator previdenciário (Lei 9.876/99) <span class="opt-tag" title="Só usado na regra de transição do PEDÁGIO DE 50% (EC 103/2019, art. 17) — a única que aplica fator previdenciário. O sistema NÃO calcula esse fator (depende da tábua de expectativa de sobrevida do IBGE, atualizada anualmente) — informe aqui o valor já calculado, se quiser ver a RMI dessa regra.">(opcional — necessário só para a regra do pedágio de 50%, calculado fora do sistema)</span>
+      <input type="number" id="prevFatorPrevidenciario" min="0" step="0.0001" placeholder="ex.: 0,8532">
+    </label></div>
+  </div>
+  <div class="row">
+    <div><label><input type="checkbox" id="prevConverterTempoEspecial"> Converter tempo especial em tempo comum
+      <span class="opt-tag" title="Só tem efeito nos vínculos marcados como 'Especial' na tabela de vínculos acima. Período posterior a 13/11/2019 (EC 103/2019) nunca é convertido, mesmo marcado como especial.">ⓘ aplica o fator de conversão (1,2× a 2,33×) aos vínculos marcados como especial</span>
+    </label></div>
+  </div>
+  <div class="actions">
+    <button type="button" id="prevBtnCalcular">Calcular</button>
+  </div>
+</fieldset>
+
+<fieldset class="card">
+  <legend>🕰️ Direito adquirido — Aposentadoria por tempo de contribuição <span class="opt-tag">(regra vigente até 12/11/2019, anterior à EC 103/2019 — art. 53, Lei 8.213/91)</span></legend>
+  <hr class="legend-rule">
+  <div class="row">
+    <div><label><input type="checkbox" id="prevAvaliarDireitoAdquirido"> Avaliar esta regra também
+      <span class="opt-tag" title="Aplica-se a quem já tinha completado TODOS os requisitos da aposentadoria por tempo de contribuição ATÉ 13/11/2019 — independe da EC 103/2019. Não é uma regra de transição, é a lei antiga aplicada integralmente (art. 3º, §2º, EC 103/2019).">(sem idade mínima — só tempo de contribuição + carência cumpridos até 13/11/2019)</span>
+    </label></div>
+  </div>
+  <div class="row">
+    <div><label>Idade em 13/11/2019 (anos) <span class="opt-tag" title="Usada só para checar a regra 96/86 pontos (art. 29-C, Lei 8.213/91) que dispensa o Fator Previdenciário — não é requisito de elegibilidade desta aposentadoria em si.">(para checar a dispensa do Fator Previdenciário — art. 29-C)</span>
+      <input type="number" id="prevIdadeEm13112019" min="0" step="0.1">
+    </label></div>
+    <div><label>Carência até 13/11/2019 (meses) <span class="req-tag" title="Campo obrigatório para esta regra">*</span>
+      <input type="number" id="prevCarenciaEm13112019" min="0" step="1">
+    </label></div>
+  </div>
+  <div class="row">
+    <div><label>Salário de benefício (80% maiores salários, regra antiga) <span class="opt-tag" title="A regra pré-reforma usa a média dos 80% MAIORES salários de contribuição desde 07/1994 (descarta os 20% menores) — DIFERENTE do salário de benefício calculado acima nos Parâmetros do cálculo, que usa 100% dos salários (regra pós-reforma). O sistema NÃO calcula esta base — informe já pronta, calculada à parte.">(NÃO é o mesmo valor da regra permanente acima — ver aviso)</span>
+      <input id="prevSalarioBeneficio80Maiores" class="money" placeholder="0,00">
+    </label></div>
+  </div>
+</fieldset>
+
+<fieldset class="card">
+  <legend>🩺 Aposentadoria por incapacidade permanente <span class="opt-tag">(Lei 8.213/91, arts. 42 e 45 — espécie separada da aposentadoria programada acima)</span></legend>
+  <hr class="legend-rule">
+  <div class="row">
+    <div><label><input type="checkbox" id="prevAvaliarIncapacidadePermanente"> Avaliar esta espécie de benefício também
+      <span class="opt-tag" title="Sem idade mínima nem tempo de contribuição mínimo — o requisito central é a própria incapacidade. Usa o mesmo salário de benefício e tempo de contribuição já calculados acima.">(marque para ver elegibilidade e RMI desta espécie ao lado da aposentadoria programada)</span>
+    </label></div>
+  </div>
+  <div class="row">
+    <div><label><input type="checkbox" id="prevIncapacidadeAtestada"> Incapacidade total e permanente atestada por perícia médica do INSS <span class="req-tag" title="Requisito central do art. 42, Lei 8.213/91">*</span></label></div>
+    <div><label><input type="checkbox" id="prevDispensaCarencia"> Dispensa de carência <span class="opt-tag" title="Acidente de qualquer natureza/causa, doença profissional/do trabalho, ou doença/afecção especificada em lista do Ministério da Saúde/Previdência (art. 26, II, Lei 8.213/91) — este sistema não tem essa lista, confirme manualmente.">(acidente ou doença/afecção listada — art. 26, II)</span></label></div>
+  </div>
+  <div class="row">
+    <div><label><input type="checkbox" id="prevCausaAcidentaria"> Incapacidade decorrente de acidente de trabalho, doença profissional ou doença do trabalho <span class="opt-tag" title="Muda a RMI de 60%+2%/ano excedente para 100% direto do salário de benefício.">(RMI = 100% direto, sem a fórmula de anos excedentes)</span></label></div>
+    <div><label><input type="checkbox" id="prevNecessitaAssistenciaPermanente"> Necessita assistência permanente de outra pessoa <span class="opt-tag" title="Art. 45, Lei 8.213/91 — acréscimo de 25%, devido mesmo que o valor já tenha atingido o teto do RGPS.">(grande invalidez — acréscimo de 25%, art. 45)</span></label></div>
+  </div>
+</fieldset>
+
+<fieldset class="card">
+  <legend>🤒 Auxílio por incapacidade temporária <span class="opt-tag">(Lei 8.213/91, arts. 59 e 61 — "auxílio-doença")</span></legend>
+  <hr class="legend-rule">
+  <div class="row">
+    <div><label><input type="checkbox" id="prevAvaliarAuxilioIncapacidadeTemp"> Avaliar esta espécie de benefício também</label></div>
+  </div>
+  <div class="row">
+    <div><label><input type="checkbox" id="prevAuxTempIncapacidadeAtestada"> Incapacidade temporária (mais de 15 dias) atestada por perícia médica <span class="req-tag" title="Requisito central do art. 59, Lei 8.213/91">*</span></label></div>
+    <div><label><input type="checkbox" id="prevAuxTempDispensaCarencia"> Dispensa de carência <span class="opt-tag" title="Acidente de qualquer natureza/causa ou doença/afecção listada, art. 26, II.">(acidente ou doença/afecção listada — art. 26, II)</span></label></div>
+  </div>
+</fieldset>
+
+<fieldset class="card">
+  <legend>🦽 Auxílio-acidente <span class="opt-tag">(Lei 8.213/91, art. 86 — indenizatório, sequela com redução de capacidade)</span></legend>
+  <hr class="legend-rule">
+  <div class="row">
+    <div><label><input type="checkbox" id="prevAvaliarAuxilioAcidente"> Avaliar esta espécie de benefício também</label></div>
+  </div>
+  <div class="row">
+    <div><label><input type="checkbox" id="prevSequelaAtestada"> Sequela permanente de acidente, com redução da capacidade para o trabalho habitual, atestada por perícia <span class="req-tag" title="Requisito central do art. 86, Lei 8.213/91">*</span></label></div>
+  </div>
+</fieldset>
+
+<fieldset class="card">
+  <legend>⚱️ Pensão por morte <span class="opt-tag">(Lei 8.213/91, arts. 16 e 74-78 — apura só elegibilidade e valor mensal, não a duração)</span></legend>
+  <hr class="legend-rule">
+  <div class="row">
+    <div><label><input type="checkbox" id="prevAvaliarPensaoPorMorte"> Avaliar esta espécie de benefício também</label></div>
+  </div>
+  <div class="row">
+    <div><label><input type="checkbox" id="prevPensaoQualidadeSegurado"> Qualidade de segurado do falecido confirmada na data do óbito <span class="req-tag" title="Requisito central do art. 74, Lei 8.213/91">*</span></label></div>
+    <div><label><input type="checkbox" id="prevPensaoDependenteReconhecido"> Dependente reconhecido (art. 16) <span class="req-tag" title="Cônjuge/companheiro e filho; pais; irmão, nas condições legais">*</span></label></div>
+  </div>
+  <div class="row">
+    <div><label>Número de dependentes (para a cota familiar) <span class="req-tag" title="Campo obrigatório para calcular a RMI">*</span>
+      <input type="number" id="prevPensaoNumeroDependentes" min="1" step="1" value="1">
+    </label></div>
+    <div><label>Valor que o segurado já recebia de aposentadoria <span class="opt-tag" title="Se o segurado JÁ era aposentado, informe aqui o valor do benefício. Deixe em branco para o sistema calcular automaticamente o valor que ele TERIA DIREITO se aposentado por incapacidade permanente na data do óbito (art. 75), usando o salário de benefício e o tempo de contribuição já calculados acima.">(opcional — em branco, calcula como se fosse aposentadoria por incapacidade permanente)</span>
+      <input id="prevPensaoValorJaRecebido" class="money" placeholder="0,00">
+    </label></div>
+  </div>
+</fieldset>
+
+<fieldset class="card">
+  <legend>🤰 Salário-maternidade <span class="opt-tag">(Lei 8.213/91, arts. 25/71-73 — sem carência para nenhuma categoria, STF ADIs 2.110/2.111)</span></legend>
+  <hr class="legend-rule">
+  <div class="row">
+    <div><label><input type="checkbox" id="prevAvaliarSalarioMaternidade"> Avaliar esta espécie de benefício também</label></div>
+  </div>
+  <div class="row">
+    <div><label><input type="checkbox" id="prevMaternidadeSegurada"> Qualidade de segurada confirmada <span class="req-tag" title="Requisito central do art. 25, III, Lei 8.213/91">*</span></label></div>
+    <div><label><input type="checkbox" id="prevMaternidadeEventoGerador"> Evento gerador comprovado (parto, aborto não criminoso, adoção ou guarda judicial) <span class="req-tag" title="Requisito central dos arts. 71/71-A">*</span></label></div>
+  </div>
+  <div class="row">
+    <div><label>Categoria da segurada <span class="req-tag" title="Campo obrigatório — muda a fórmula da RMI">*</span>
+      <select id="prevMaternidadeCategoria">
+        <option value="">Selecione</option>
+        <option value="empregada_avulsa">Empregada / trabalhadora avulsa</option>
+        <option value="domestica">Empregada doméstica</option>
+        <option value="especial_economia_familiar">Segurada especial (economia familiar)</option>
+        <option value="especial_contribuinte_individual">Segurada especial que contribuiu como contribuinte individual</option>
+        <option value="demais">Demais seguradas (contribuinte individual/facultativa)</option>
+      </select>
+    </label></div>
+    <div><label>Base de cálculo <span class="opt-tag" title="Remuneração integral (empregada/avulsa), último salário de contribuição (doméstica), 1/12 do valor anual (especial-CI) ou média dos últimos 12 SC (demais). O sistema NÃO calcula essas bases — informe já pronta. Não se aplica à segurada especial em economia familiar (sempre 1 salário mínimo).">(não se aplica à segurada especial em economia familiar)</span>
+      <input id="prevMaternidadeBaseCalculo" class="money" placeholder="0,00">
+    </label></div>
+  </div>
+</fieldset>
+
+<h2 class="section-title">Resultado — RGPS/INSS</h2>
+<div id="prevResultado"></div>
+
+<div id="toast"></div>
+
+<!-- Bibliotecas de terceiro (precisam de internet; usadas só por PDF/Excel/leitura).
+     SEM atributo integrity (SRI) — ver docs/ARQUITETURA-ATUAL.md, seção
+     "Segurança": não foi possível calcular hashes SRI reais nesta correção
+     (ambiente sandbox sem acesso de rede pra baixar o binário de cada
+     arquivo). Um hash forjado/desatualizado quebraria silenciosamente o
+     upload de PDF/Excel para todo usuário assim que o CDN atualizasse o
+     arquivo — pior que não ter SRI nenhum. A CSP em backend/server.js já
+     restringe script-src a este host específico (cdnjs.cloudflare.com),
+     que é a mitigação equivalente disponível sem os hashes. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.0.4/tesseract.min.js"></script>
+
+<!-- Núcleo compartilhado (não é específico de nenhum domínio): leitura de
+     PDF (pdfjsLib/Tesseract acima), normalização de texto, parsing BR
+     genérico, motor de decisão de campos e mecanismo de relatório. -->
+<script src="js/core/temaEServiceWorker.js"></script>
+<script src="js/core/util.js"></script>
+<script src="js/core/indices.js"></script>
+<script src="js/core/estruturaTexto.js"></script>
+<script src="js/core/estruturaTextoAsync.js"></script>
+<script src="js/core/normalizadorTexto.js"></script>
+<script src="js/core/leitorPdf.js"></script>
+<script src="js/core/classificadorExtrator.js"></script>
+<script src="js/core/decisorCampos.js"></script>
+<script src="js/core/motorRelatorios.js"></script>
+<script src="js/core/calculoPeriodos.js"></script>
+
+<!-- Domínio previdenciário (RGPS/INSS) -->
+<script src="js/domains/previdenciario/dicionarioPrevidenciario.js"></script>
+<script src="js/domains/previdenciario/index.js"></script>
+<script src="js/domains/previdenciario/motorTempoContribuicao.js"></script>
+<script src="js/domains/previdenciario/dados-historicos/tetoRgps.js"></script>
+<script src="js/domains/previdenciario/motorRMI.js"></script>
+<script src="js/domains/previdenciario/regras/direitoAdquirido/aposentadoriaTempoContribuicao.js"></script>
+<script src="js/domains/previdenciario/regras/transicao/pontos.js"></script>
+<script src="js/domains/previdenciario/regras/transicao/idadeMinimaProgressiva.js"></script>
+<script src="js/domains/previdenciario/regras/transicao/pedagio50.js"></script>
+<script src="js/domains/previdenciario/regras/transicao/pedagio100.js"></script>
+<script src="js/domains/previdenciario/comparador/comparadorRegrasPrevidenciarias.js"></script>
+<script src="js/domains/previdenciario/beneficios/incapacidadePermanente.js"></script>
+<script src="js/domains/previdenciario/beneficios/auxilioIncapacidadeTemporaria.js"></script>
+<script src="js/domains/previdenciario/beneficios/auxilioAcidente.js"></script>
+<script src="js/domains/previdenciario/beneficios/pensaoPorMorte.js"></script>
+<script src="js/domains/previdenciario/beneficios/salarioMaternidade.js"></script>
+<script src="js/domains/previdenciario/validacaoFinal/validadorFinalCalculo.js"></script>
+<script src="js/domains/previdenciario/document-types/cnis.js"></script>
+<script src="js/domains/previdenciario/document-types/ctps.js"></script>
+<script src="js/domains/previdenciario/document-types/requerimentoAdministrativo.js"></script>
+<script src="js/domains/previdenciario/document-types/cartaConcessao.js"></script>
+<script src="js/domains/previdenciario/document-types/cartaIndeferimento.js"></script>
+<script src="js/domains/previdenciario/document-types/decisaoAdministrativa.js"></script>
+<script src="js/domains/previdenciario/document-types/processoJudicial.js"></script>
+<script src="js/domains/previdenciario/document-types/laudoPericial.js"></script>
+<script src="js/domains/previdenciario/document-types/ppp.js"></script>
+<script src="js/domains/previdenciario/document-types/index.js"></script>
+<script src="js/domains/previdenciario/semantics/termosPrevidenciarios.js"></script>
+<script src="js/domains/previdenciario/semantics/termos-index.js"></script>
+<script src="js/domains/previdenciario/semantics/conceptResolverPrevidenciario.js"></script>
+<script src="js/domains/previdenciario/semantics/normalizadorTrechoPrevidenciario.js"></script>
+<script src="js/domains/previdenciario/semantics/semanticMapperPrevidenciario.js"></script>
+<script src="js/domains/previdenciario/semantics/mapeamentoIndex.js"></script>
+<script src="js/domains/previdenciario/evidence/evidenciaPrevidenciaria.js"></script>
+<script src="js/domains/previdenciario/candidates/candidatePoolPrevidenciario.js"></script>
+<script src="js/domains/previdenciario/decision/decisionEnginePrevidenciario.js"></script>
+<script src="js/domains/previdenciario/ia/iaRevisoraPrevidenciaria.js"></script>
+<script src="js/domains/previdenciario/preenchimento/preenchimentoAutomaticoPrevidenciario.js"></script>
+<script src="js/domains/previdenciario/field-rules/vinculos.js"></script>
+<script src="js/domains/previdenciario/field-rules/contribuicoes.js"></script>
+<script src="js/domains/previdenciario/field-rules/campos.js"></script>
+<script src="js/domains/previdenciario/field-rules/index.js"></script>
+<script src="js/domains/previdenciario/extraction/reconstrucaoTabelaPrevidenciaria.js"></script>
+<script src="js/domains/previdenciario/extraction/extratorVinculosCNIS.js"></script>
+<script src="js/domains/previdenciario/extraction/extratorRemuneracoesCNIS.js"></script>
+<script src="js/domains/previdenciario/mapping/mapperPrevidenciario.js"></script>
+<script src="js/domains/previdenciario/historico/historicoPrevidenciario.js"></script>
+<script src="js/domains/previdenciario/correcao/correcaoINPCPrevidenciario.js"></script>
+<script src="js/domains/previdenciario/motorSalarioBeneficio.js"></script>
+<script src="js/domains/previdenciario/carencia/validacaoCarenciaPrevidenciaria.js"></script>
+<script src="js/domains/previdenciario/motorRMIDoHistorico.js"></script>
+<script src="js/domains/previdenciario/ui/painelPrevidenciarioEstado.js"></script>
+<script src="js/domains/previdenciario/ui/painelPrevidenciarioConferencia.js"></script>
+<script src="js/domains/previdenciario/ui/painelPrevidenciarioCalculo.js"></script>
+<script src="js/domains/previdenciario/ui/painelPrevidenciarioResultado.js"></script>
+<script src="js/domains/previdenciario/ui/painelPrevidenciarioWiring.js"></script>
+</body>
+</html>
